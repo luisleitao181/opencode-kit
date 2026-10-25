@@ -1,0 +1,351 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+
+  // ── MODELS (OpenCode Go profile) ───────────────────────────
+  // Format: provider/model-id. Go = "opencode-go/...".
+  // Run `opencode models` to confirm the IDs in your account.
+  "model": "opencode-go/deepseek-v4.1-flash",
+
+  "update": "notify",
+  "default_agent": "orchestrator",
+
+  // Machine-specific facts are installed as instructions/machine.md by
+  // scripts/install.sh (Linux) or scripts/install.ps1 (Windows).
+  "instructions": ["~/.config/opencode/instructions/machine.md"],
+
+  // ── SAVE TOKENS ────────────────────────────────────────────
+  "compaction": { "auto": true },
+
+  // ── EXPERIMENTAL ───────────────────────────────────────────
+  // Allows developer to launch robotics without an orchestrator relay.
+  "experimental": { "subagent_depth": 2 },
+
+  // ── PERMISSIONS (V2) ───────────────────────────────────────
+  // Ordered rules: the LAST match wins; no match -> "ask".
+  // Windows and Linux rules coexist: rules for the other OS simply do not match.
+  // Non-negotiable prohibitions live in `policies`, which are evaluated last.
+  "permissions": [
+    { "action": "*", "resource": "*", "effect": "allow" },
+
+    // ── shell: narrow allowlist (default becomes ask) ────────────
+    { "action": "shell", "resource": "*", "effect": "ask" },
+
+    // Navigation and inspection (read-only, Unix + PowerShell/cmd)
+    { "action": "shell", "resource": "ls *", "effect": "allow" },
+    { "action": "shell", "resource": "pwd", "effect": "allow" },
+    { "action": "shell", "resource": "cat *", "effect": "allow" },
+    { "action": "shell", "resource": "head *", "effect": "allow" },
+    { "action": "shell", "resource": "tail *", "effect": "allow" },
+    { "action": "shell", "resource": "wc *", "effect": "allow" },
+    { "action": "shell", "resource": "tree *", "effect": "allow" },
+    { "action": "shell", "resource": "file *", "effect": "allow" },
+    { "action": "shell", "resource": "stat *", "effect": "allow" },
+    { "action": "shell", "resource": "diff *", "effect": "allow" },
+    { "action": "shell", "resource": "realpath *", "effect": "allow" },
+    { "action": "shell", "resource": "grep *", "effect": "allow" },
+    { "action": "shell", "resource": "rg *", "effect": "allow" },
+    { "action": "shell", "resource": "find *", "effect": "allow" },
+    { "action": "shell", "resource": "jq *", "effect": "allow" },
+    { "action": "shell", "resource": "dir *", "effect": "allow" },
+    { "action": "shell", "resource": "Get-Location", "effect": "allow" },
+    { "action": "shell", "resource": "Get-ChildItem *", "effect": "allow" },
+    { "action": "shell", "resource": "gci *", "effect": "allow" },
+    { "action": "shell", "resource": "Get-Content *", "effect": "allow" },
+    { "action": "shell", "resource": "gc *", "effect": "allow" },
+    { "action": "shell", "resource": "type *", "effect": "allow" },
+    { "action": "shell", "resource": "Get-Item *", "effect": "allow" },
+    { "action": "shell", "resource": "Test-Path *", "effect": "allow" },
+    { "action": "shell", "resource": "Resolve-Path *", "effect": "allow" },
+    { "action": "shell", "resource": "Select-String *", "effect": "allow" },
+    { "action": "shell", "resource": "sls *", "effect": "allow" },
+    { "action": "shell", "resource": "findstr *", "effect": "allow" },
+    { "action": "shell", "resource": "where *", "effect": "allow" },
+    { "action": "shell", "resource": "where.exe *", "effect": "allow" },
+    { "action": "shell", "resource": "Get-Command *", "effect": "allow" },
+    { "action": "shell", "resource": "Measure-Object *", "effect": "allow" },
+    { "action": "shell", "resource": "Compare-Object *", "effect": "allow" },
+    { "action": "shell", "resource": "Get-FileHash *", "effect": "allow" },
+
+    // git: READ ONLY. Writes (commit/push/reset/checkout/...) ask.
+    { "action": "shell", "resource": "git status *", "effect": "allow" },
+    { "action": "shell", "resource": "git diff *", "effect": "allow" },
+    { "action": "shell", "resource": "git log *", "effect": "allow" },
+    { "action": "shell", "resource": "git show *", "effect": "allow" },
+    { "action": "shell", "resource": "git branch *", "effect": "allow" },
+    { "action": "shell", "resource": "git blame *", "effect": "allow" },
+    { "action": "shell", "resource": "git remote -v", "effect": "allow" },
+    { "action": "shell", "resource": "git rev-parse *", "effect": "allow" },
+    { "action": "shell", "resource": "git ls-files *", "effect": "allow" },
+    { "action": "shell", "resource": "git describe *", "effect": "allow" },
+    { "action": "shell", "resource": "git stash list *", "effect": "allow" },
+    { "action": "shell", "resource": "git tag -l *", "effect": "allow" },
+    { "action": "shell", "resource": "git config --get *", "effect": "allow" },
+    { "action": "shell", "resource": "git config --list *", "effect": "allow" },
+
+    // Python: only known tools. Running an agent-authored script or `-c` ASKS.
+    // Linux/macOS use python3; native Windows uses python or py.
+    { "action": "shell", "resource": "python3 -m pytest *", "effect": "allow" },
+    { "action": "shell", "resource": "python3 -m ruff *", "effect": "allow" },
+    { "action": "shell", "resource": "python3 -m black *", "effect": "allow" },
+    { "action": "shell", "resource": "python3 -m mypy *", "effect": "allow" },
+    { "action": "shell", "resource": "python3 -m flake8 *", "effect": "allow" },
+    { "action": "shell", "resource": "python3 -m pip list*", "effect": "allow" },
+    { "action": "shell", "resource": "python3 -m pip show*", "effect": "allow" },
+    { "action": "shell", "resource": "python3 -V", "effect": "allow" },
+    { "action": "shell", "resource": "python3 --version", "effect": "allow" },
+    { "action": "shell", "resource": "python -m pytest *", "effect": "allow" },
+    { "action": "shell", "resource": "python -m ruff *", "effect": "allow" },
+    { "action": "shell", "resource": "python -m black *", "effect": "allow" },
+    { "action": "shell", "resource": "python -m mypy *", "effect": "allow" },
+    { "action": "shell", "resource": "python -m flake8 *", "effect": "allow" },
+    { "action": "shell", "resource": "python -m pip list*", "effect": "allow" },
+    { "action": "shell", "resource": "python -m pip show*", "effect": "allow" },
+    { "action": "shell", "resource": "python -V", "effect": "allow" },
+    { "action": "shell", "resource": "python --version", "effect": "allow" },
+    { "action": "shell", "resource": "py -m pytest *", "effect": "allow" },
+    { "action": "shell", "resource": "py -3 -m pytest *", "effect": "allow" },
+    { "action": "shell", "resource": "py -m pip list*", "effect": "allow" },
+    { "action": "shell", "resource": "py -3 -m pip list*", "effect": "allow" },
+    { "action": "shell", "resource": "py -0p", "effect": "allow" },
+    { "action": "shell", "resource": "pytest *", "effect": "allow" },
+    { "action": "shell", "resource": "ruff *", "effect": "allow" },
+    { "action": "shell", "resource": "black *", "effect": "allow" },
+    { "action": "shell", "resource": "mypy *", "effect": "allow" },
+
+    // Node / build / other installed toolchains
+    { "action": "shell", "resource": "node --version", "effect": "allow" },
+    { "action": "shell", "resource": "npm run *", "effect": "allow" },
+    { "action": "shell", "resource": "npm test*", "effect": "allow" },
+    { "action": "shell", "resource": "npm ls *", "effect": "allow" },
+    { "action": "shell", "resource": "make *", "effect": "allow" },
+    { "action": "shell", "resource": "cmake --build *", "effect": "allow" },
+    { "action": "shell", "resource": "cargo build*", "effect": "allow" },
+    { "action": "shell", "resource": "cargo test*", "effect": "allow" },
+    { "action": "shell", "resource": "cargo clippy*", "effect": "allow" },
+    { "action": "shell", "resource": "colcon build *", "effect": "allow" },
+    { "action": "shell", "resource": "colcon test *", "effect": "allow" },
+    { "action": "shell", "resource": "dotnet build*", "effect": "allow" },
+    { "action": "shell", "resource": "dotnet test*", "effect": "allow" },
+    { "action": "shell", "resource": "dotnet list*", "effect": "allow" },
+    { "action": "shell", "resource": "mvn compile*", "effect": "allow" },
+    { "action": "shell", "resource": "mvn test*", "effect": "allow" },
+
+    // Working directories
+    { "action": "shell", "resource": "cd *", "effect": "allow" },
+    { "action": "shell", "resource": "mkdir *", "effect": "allow" },
+    { "action": "shell", "resource": "Set-Location *", "effect": "allow" },
+    { "action": "shell", "resource": "sl *", "effect": "allow" },
+    { "action": "shell", "resource": "Push-Location *", "effect": "allow" },
+    { "action": "shell", "resource": "Pop-Location", "effect": "allow" },
+    { "action": "shell", "resource": "New-Item -ItemType Directory *", "effect": "allow" },
+
+    // Scratch: /tmp/opencode is disposable on Linux. Windows deletions still ask.
+    { "action": "shell", "resource": "rm -rf /tmp/opencode/*", "effect": "allow" },
+    { "action": "shell", "resource": "rm -r /tmp/opencode/*", "effect": "allow" },
+
+    // V2 allows external directories by default; restore an explicit boundary,
+    // with disposable scratch directories as the only automatic exceptions.
+    { "action": "external_directory", "resource": "*", "effect": "ask" },
+    { "action": "external_directory", "resource": "/tmp/opencode/*", "effect": "allow" },
+    { "action": "external_directory", "resource": "~/AppData/Local/Temp/opencode/*", "effect": "allow" },
+
+    // MCP: denied globally; each agent re-enables only what it needs.
+    { "action": "context7_*", "resource": "*", "effect": "deny" },
+    { "action": "exa_*", "resource": "*", "effect": "deny" },
+    { "action": "playwright_*", "resource": "*", "effect": "deny" },
+    { "action": "memory_*", "resource": "*", "effect": "deny" }
+  ],
+
+  // ── POLICIES (V2) ──────────────────────────────────────────
+  // HARD deny: never prompts and cannot be overridden by agent rules,
+  // saved approvals ("Allow always") or project config.
+  "policies": [
+    // Privilege escalation
+    { "action": "tool.use", "resource": "shell:sudo *", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:su *", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:doas *", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:runas *", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:Start-Process*-Verb RunAs*", "effect": "deny" },
+
+    // Destructive filesystem primitives
+    { "action": "tool.use", "resource": "shell:mkfs*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:dd *", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:shred *", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:rm -rf /*", "effect": "deny" },
+    // The Linux scratch dir is meant to be deleted. This lifts exactly that
+    // path under the broad deny above (policies: last match wins).
+    { "action": "tool.use", "resource": "shell:rm -rf /tmp/*", "effect": "allow" },
+    { "action": "tool.use", "resource": "shell:rm -rf ~*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:rm -rf $HOME*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:format *", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:diskpart*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:Clear-Disk*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:Remove-Partition*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:cipher /w*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:vssadmin delete shadows*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:bcdedit*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:reg delete*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:Remove-Item -Recurse -Force C:", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:Remove-Item -Recurse -Force C:/", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:Remove-Item -Recurse -Force C:\\", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:Remove-Item -Recurse -Force ~*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:Remove-Item -Recurse -Force $HOME*", "effect": "deny" },
+
+    // Publishing: the USER does it. Reading remotes stays allowed.
+    { "action": "tool.use", "resource": "shell:git push*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:git remote add*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:git remote set-url*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:git remote remove*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:git remote rm*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:gh *", "effect": "deny" },
+
+    // Git: never rewrite history or force push
+    { "action": "tool.use", "resource": "shell:git push --force*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:git push -f*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:git push --delete*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:git reset --hard*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:git clean -f*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:git filter-branch*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:git filter-repo*", "effect": "deny" },
+
+    // Databases: never delete
+    { "action": "tool.use", "resource": "shell:*DROP DATABASE*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:*drop database*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:*DROP TABLE*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:*drop table*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:*FLUSHALL*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:*flushall*", "effect": "deny" },
+
+    // Secrets: never read or write (real .env file)
+    { "action": "tool.use", "resource": "read:*.env", "effect": "deny" },
+    { "action": "tool.use", "resource": "read:*.env.*", "effect": "deny" },
+    { "action": "tool.use", "resource": "read:*.env.example", "effect": "allow" },
+    { "action": "tool.use", "resource": "edit:*.env", "effect": "deny" },
+    { "action": "tool.use", "resource": "edit:*.env.*", "effect": "deny" },
+    { "action": "tool.use", "resource": "edit:*.env.example", "effect": "allow" },
+
+    // Secrets: credential material, by any tool (read). Read paths are
+    // normalized to forward slashes, including on Windows.
+    { "action": "tool.use", "resource": "read:*/.ssh/*", "effect": "deny" },
+    { "action": "tool.use", "resource": "edit:*/.ssh/*", "effect": "deny" },
+    { "action": "tool.use", "resource": "read:*/.aws/*", "effect": "deny" },
+    { "action": "tool.use", "resource": "read:*/.azure/*", "effect": "deny" },
+    { "action": "tool.use", "resource": "read:*/.config/gcloud/*", "effect": "deny" },
+    { "action": "tool.use", "resource": "read:*/.config/gh/*", "effect": "deny" },
+    { "action": "tool.use", "resource": "read:*/AppData/Roaming/gcloud/*", "effect": "deny" },
+    { "action": "tool.use", "resource": "read:*/AppData/Roaming/GitHub CLI/*", "effect": "deny" },
+    { "action": "tool.use", "resource": "read:*/.netrc", "effect": "deny" },
+    { "action": "tool.use", "resource": "read:*/.git-credentials", "effect": "deny" },
+    { "action": "tool.use", "resource": "read:*/.pgpass", "effect": "deny" },
+    { "action": "tool.use", "resource": "read:*/.docker/config.json", "effect": "deny" },
+    { "action": "tool.use", "resource": "read:*id_rsa*", "effect": "deny" },
+    { "action": "tool.use", "resource": "read:*/*.pem", "effect": "deny" },
+    { "action": "tool.use", "resource": "read:*/*.key", "effect": "deny" },
+
+    // Secrets via shell. Shell resources are raw command text, so Windows
+    // backslash paths need their own patterns.
+    { "action": "tool.use", "resource": "shell:*/.ssh/*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:*\\.ssh\\*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:*/.aws/*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:*\\.aws\\*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:*/.azure/*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:*\\.azure\\*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:*/.config/gcloud/*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:*\\.config\\gcloud\\*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:*/.config/gh/*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:*\\.config\\gh\\*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:*/AppData/Roaming/gcloud/*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:*\\AppData\\Roaming\\gcloud\\*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:*/AppData/Roaming/GitHub CLI/*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:*\\AppData\\Roaming\\GitHub CLI\\*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:*/.git-credentials*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:*\\.git-credentials*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:*/.netrc*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:*\\.netrc*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:*id_rsa*", "effect": "deny" },
+
+    // .env via shell. `*.env` also matches a bare `.env`; it does not match
+    // `.env.example`.
+    { "action": "tool.use", "resource": "shell:cat *.env", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:head *.env", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:tail *.env", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:less *.env", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:more *.env", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:strings *.env", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:grep *.env", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:Get-Content *.env", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:gc *.env", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:type *.env", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:Select-String *.env", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:sls *.env", "effect": "deny" },
+
+    // Wrappers that would hide the real command from the substring rules.
+    { "action": "tool.use", "resource": "shell:bash -c*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:sh -c*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:eval *", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:cmd /c*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:cmd.exe /c*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:powershell*-Command*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:powershell*-c *", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:pwsh*-Command*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:pwsh*-c *", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:iex *", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:Invoke-Expression*", "effect": "deny" },
+
+    // Environment dump: exposes provider keys / tokens living in the env.
+    { "action": "tool.use", "resource": "shell:env", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:env *", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:printenv*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:set", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:set *", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:Get-ChildItem Env:*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:gci Env:*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:dir Env:*", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:ls Env:*", "effect": "deny" },
+
+    // `git config --get http.*` can expose an auth header token.
+    { "action": "tool.use", "resource": "shell:git config --get http.*", "effect": "deny" }
+  ],
+
+  // ── MCP SERVERS ────────────────────────────────────────────
+  "mcp": {
+    "servers": {
+      "context7": {
+        "type": "remote",
+        "url": "https://mcp.context7.com/mcp"
+        // Optional (higher rate limit): "headers": { "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}" }
+      },
+      "playwright": {
+        "type": "local",
+        "command": ["npx", "-y", "@playwright/mcp@latest"]
+        // Requires native Node/npx; disable on a Linux installation without it.
+      },
+      "exa": {
+        "type": "remote",
+        "url": "https://mcp.exa.ai/mcp"
+      },
+      "memory": {
+        "type": "local",
+        "command": ["npx", "-y", "@modelcontextprotocol/server-memory"]
+        // Requires native Node/npx; disable on a Linux installation without it.
+      }
+    }
+  },
+
+  // ── BUILT-IN AGENTS (override). Custom agents: agents/*.md ──
+  "agents": {
+    "title": {
+      "model": "opencode-go/deepseek-v4.1-flash"
+    },
+    "build": {
+      "model": "opencode-go/deepseek-v4.1-flash"
+    },
+    "plan": {
+      "model": "opencode-go/deepseek-v4.1-flash",
+      "permissions": [
+        { "action": "edit", "resource": "*", "effect": "deny" },
+        { "action": "shell", "resource": "*", "effect": "ask" }
+      ]
+    }
+  }
+}

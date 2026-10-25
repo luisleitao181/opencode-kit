@@ -1,0 +1,26 @@
+# ── Secrets: never commit any of these ────────────────────────────────
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.jks
+*.pfx
+credentials.json
+service-account*.json
+.netrc
+.pgpass
+auth.json
+mcp-auth.json
+*.bak.*
+config/instructions/*.local.md
+
+# ── Local artifacts ───────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.playwright-mcp/
+.audit-baseline.json
+.DS_Store
+*.log

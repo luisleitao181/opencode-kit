@@ -1,0 +1,42 @@
+# Secret-related files to keep out of git.
+# Append this block to your project's .gitignore.
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Private keys and certificates
+*.pem
+*.key
+*.p12
+*.jks
+
+# SSH keys
+id_rsa*
+id_ed25519*
+id_ecdsa*
+id_dsa*
+
+# Service-account / cloud credentials
+credentials.json
+service-account*.json
+*.credentials.json
+*.service-account.json
+
+# Network / database credential files
+.netrc
+.pgpass
+.git-credentials
+.mypgpass
+.htpasswd
+
+# Local tool configs that may contain secrets
+*.keystore
+*.pfx
+*.cer
+*.crt
+*.der
+
+# Secrets-scanner baselines (review before committing)
+#.secrets.baseline

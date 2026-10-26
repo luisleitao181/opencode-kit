@@ -83,6 +83,7 @@ In the TUI: **Tab** cycles agents, `@researcher` answers, and `/review` runs on 
 - **Tab** switches primary agents; **@name** launches a subagent.
 - `/review`, `/debug <error>`, `/devloop`, `/security-review`, `/add-platform <name>`.
 - Cheap subagents (`researcher`, `docs-writer`, `tester`) protect the main model's quota.
+- A short prompt-sound cue plays when a prompt is submitted (can be removed from `plugins/`).
 - **Shift+drag** selects text in the TUI.
 
 ## Layout
@@ -94,11 +95,13 @@ config/
   instructions/       per-machine fact templates (example/local)
   agents/             nine agent definitions
   commands/           /review /debug /devloop /security-review /add-platform
-  plugins/            guardrails, permission audit, permission descriptions
+  plugins/            guardrails, permission audit/descriptions, prompt sound
   skills/             ros2-python, isaac-sim, webots, unity
 scripts/
   install.sh          Linux/WSL installer (symlinks)
   install.ps1         Windows installer (junctions/hardlinks, or -Copy)
+  generate-sound.py   synthesise the prompt-sound fallback WAV
+  fetch-mp3.py        download the recorded prompt cue
   secure-commit.sh    pre-commit secret scanner for your own repositories
   gitignore-security.txt  .gitignore block for secrets
   audit-deps.sh       dependency audit that fails only on new vulnerabilities

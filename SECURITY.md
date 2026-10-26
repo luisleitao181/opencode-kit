@@ -11,7 +11,6 @@ the limit, do anything you can. Treat them as a seat belt, not a sandbox.
 | **Secrets** | `policies` | Reading or writing `.env`, SSH/AWS/gcloud/gh credentials, `.netrc`, `.git-credentials`, `.pgpass`, `id_rsa*`, `*.pem`, `*.key` — via files and shell |
 | **Hard bans** | `policies` | Privilege escalation, destructive disk commands, history rewrites, database drops, and publishing (`git push`, remote rewrites, `gh`) |
 | **Friction** | `permissions` | Narrow shell allowlist: routine work is automatic; writes, installs, network clients and interpreter scripts ask |
-| **Explanation** | `plugins/permission-desc` | Approving blind: the prompt shows the sentence the agent wrote before the tool call |
 | **Git hygiene** | `scripts/secure-commit.sh` | Committing a secret from any source (optional pre-commit scan) |
 | **Guardrails** | `plugins/guardrails.ts` | Secrets in a tool result reaching the model; they are redacted first |
 | **Dependency audit** | `scripts/audit-deps.sh` | New dependency vulnerabilities (optional) |

@@ -72,7 +72,7 @@ when present, otherwise the example, to `~/.config/opencode/instructions/machine
 opencode --version                 # 2.x
 opencode debug config              # config parses
 opencode debug agents              # all agents load
-opencode plugin list               # guardrails, explain, permission-desc
+opencode plugin list               # guardrails, explain, prompt-sound
 opencode mcp list                  # remote MCPs connect; local ones need Node
 ```
 
@@ -95,7 +95,7 @@ config/
   instructions/       per-machine fact templates (example/local)
   agents/             nine agent definitions
   commands/           /review /debug /devloop /security-review /add-platform
-  plugins/            guardrails, permission audit/descriptions, prompt sound
+  plugins/            guardrails, permission audit, prompt sound
   skills/             ros2-python, isaac-sim, webots, unity
 scripts/
   install.sh          Linux/WSL installer (symlinks)
@@ -153,8 +153,8 @@ The full model, including what is *not* protected, is in **[SECURITY.md](SECURIT
 - **Policies:** hard denials for privilege escalation, destructive disk operations, history
   rewrites, publishing (`git push`, remote rewrites, `gh`), database drops and credential files.
   They cannot be overridden by an agent or a saved approval.
-- **Plugins:** `guardrails` redacts secrets from tool output; `permission-desc` shows the agent's
-  stated intent in approval prompts; `explain` writes an audit log.
+- **Plugins:** `guardrails` redacts secrets from tool output; `explain` writes an audit log of
+  permission requests.
 - **Limit:** these are seat belts, not a sandbox. Arbitrary code you approve runs with your
   authority.
 

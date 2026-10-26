@@ -1,13 +1,8 @@
-// Permission explainer — server half (OpenCode V2 plugin API).
+// Permission audit trail (OpenCode V2 plugin API).
 //
-// AUDIT ONLY. It never decides (`event.effect` is never touched) and it no
-// longer builds any description text: the explanation the user sees is produced
-// by the client-side plugin `permission-desc/tui.ts`, which can read the agent's
-// own words. Keeping a second copy of the rule table here was pure duplication
-// and a maintenance hazard.
-//
-// Server-side text fields (`event.message`/`metadata`) are not rendered by the
-// TUI, so there is nothing to gain from filling them from here.
+// Read-only observer: it never decides (`event.effect` is never touched). Every
+// permission request resolved to "ask" is appended to a local log, which helps
+// review what the agent tried to do without showing anything in the TUI.
 
 import { Plugin } from "@opencode/plugin"
 import { appendFileSync, mkdirSync } from "node:fs"

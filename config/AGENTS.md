@@ -70,13 +70,6 @@ unprivileged user with no access to the real accounts (see `SECURITY.md` and
 - A window closing is not a failure. Never relaunch a GUI to "keep it alive", never retry it, never probe the
   display. Before reacting, tell three cases apart: the user closed the view (normal), the process really died
   (exit code/log shows it), or the code is buggy (only the last two are findings).
-- **Always write ONE short line of intent immediately before calling a tool that will need
-  approval** — what you are about to do and why ("running the PID tests to confirm the fix").
-  The `permission-desc` plugin reads that text from the message carrying the tool call and shows
-  it in the permission prompt, for the main agent AND for subagents (whose chat text otherwise
-  never reaches the user). Without your line the prompt falls back to a generic description of
-  the command, which is far less useful. Add the specifics the command text cannot show: which
-  files, which remote, what gets discarded. Never assume the user knows what a command does.
 - Tests: `@tester` reports what is NOT covered, not just a percentage. For new code, cover the
   behaviour (edge cases included). Only enforce a numeric threshold if the project already
   defines one — otherwise the number becomes a box to tick instead of a signal.

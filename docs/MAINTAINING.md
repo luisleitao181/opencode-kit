@@ -36,8 +36,9 @@ The kit targets **OpenCode V2** (`@opencode/cli`), not the legacy `opencode-ai` 
 
 - V2 discovers global plugins under `~/.config/opencode/plugins/` and resolves
   `@opencode/plugin` at runtime, so local plugins need no `package.json`.
-- A plugin directory loads its `index.ts`; a `tui.ts` beside it is the terminal-client half.
-  Packaging a plugin for reuse requires a `package.json` with a `./tui` export.
+- A plugin directory can provide `index.ts` (server) and `tui.ts` (terminal client); a TUI-only
+  plugin may provide `tui.ts` alone. Packaging a plugin for reuse requires a `package.json` with
+  a `./tui` export.
 - The audit log belongs under the OS temporary directory (`os.tmpdir()`), never a hardcoded
   `/tmp`.
 - After changing a plugin, restart the service and check `opencode plugin list` plus the server
@@ -53,7 +54,7 @@ opencode mcp list
 ```
 
 Then start the TUI and check that **Tab** cycles agents, a subagent responds, a permission prompt
-appears with the intent toast, and a fake secret in a scratch file is redacted.
+appears, and a fake secret in a scratch file is redacted.
 
 Check configuration warnings in `~/.local/share/opencode/log/opencode.log`; invalid policy
 statements are dropped with only a log warning.

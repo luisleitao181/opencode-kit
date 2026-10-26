@@ -20,7 +20,7 @@ Clone it, run one script, connect your provider.
 ```powershell
 npm uninstall -g opencode-ai                 # only if V1 is installed
 npm install -g @opencode/cli
-git clone <your-repo-url> $HOME\Documents\opencode-kit
+git clone https://github.com/luisleitao181/opencode-kit.git $HOME\Documents\opencode-kit
 
 powershell -NoProfile -ExecutionPolicy Bypass -File `
   $HOME\Documents\opencode-kit\scripts\install.ps1
@@ -36,7 +36,7 @@ standalone copy. Re-run it if an editor replaces a hardlinked file on save.
 
 ```bash
 curl -fsSL https://opencode.ai/v2/install | bash
-git clone <your-repo-url> ~/opencode-kit
+git clone https://github.com/luisleitao181/opencode-kit.git ~/opencode-kit
 ~/opencode-kit/scripts/install.sh
 opencode                                     # then: /connect -> OpenCode Go
 ```

@@ -153,7 +153,14 @@
     { "action": "context7_*", "resource": "*", "effect": "deny" },
     { "action": "exa_*", "resource": "*", "effect": "deny" },
     { "action": "playwright_*", "resource": "*", "effect": "deny" },
-    { "action": "memory_*", "resource": "*", "effect": "deny" }
+    { "action": "memory_*", "resource": "*", "effect": "deny" },
+    { "action": "figma_*", "resource": "*", "effect": "deny" },
+
+    // Third-party design skills: denied everywhere except app-developer,
+    // which re-allows only its selected skills in its agent frontmatter.
+    { "action": "skill", "resource": "impeccable", "effect": "deny" },
+    { "action": "skill", "resource": "emil-*", "effect": "deny" },
+    { "action": "skill", "resource": "figma-*", "effect": "deny" }
   ],
 
   // ── POLICIES (V2) ──────────────────────────────────────────
@@ -328,6 +335,11 @@
         "type": "local",
         "command": ["npx", "-y", "@modelcontextprotocol/server-memory"]
         // Requires native Node/npx; disable on a Linux installation without it.
+      },
+      "figma": {
+        "type": "remote",
+        "url": "https://mcp.figma.com/mcp"
+        // OAuth: opencode mcp auth figma (or /mcps). Used only by app-developer.
       }
     }
   },

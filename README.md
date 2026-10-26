@@ -1,6 +1,6 @@
 # OpenCode Kit
 
-A portable OpenCode V2 setup kept as a repository: nine agents with per-role models, shared
+A portable OpenCode V2 setup kept as a repository: ten agents with per-role models, shared
 rules, platform skills, MCP servers and a security layer enforced by permissions and policies.
 
 Clone it, run one script, connect your provider. 
@@ -93,7 +93,7 @@ config/
   opencode.jsonc      models, permissions, policies, MCP servers
   AGENTS.md           global rules loaded in every session
   instructions/       per-machine fact templates (example/local)
-  agents/             nine agent definitions
+  agents/             ten agent definitions
   commands/           /review /debug /devloop /security-review /add-platform
   plugins/            guardrails, permission audit, prompt sound
   skills/             ros2-python, isaac-sim, webots, unity
@@ -108,6 +108,7 @@ scripts/
   sandbox-user.sh     optional Linux/WSL isolation setup
   oc.sh               optional launcher for the sandbox
 docs/MAINTAINING.md   configuration and plugin notes for humans
+docs/FRONTEND.md      optional frontend/design skills and Figma workflow
 docs/ISOLATION.md     optional sandbox setup and troubleshooting
 SECURITY.md           threat model and limits
 ```
@@ -118,6 +119,7 @@ SECURITY.md           threat model and limits
 |---|---|---|---|
 | `orchestrator` | primary | deepseek-v4.1-flash | Default; routes work to specialists |
 | `developer` | all | kimi-k2.7-code | General software development |
+| `app-developer` | all | kimi-k2.7-code | Frontend/UI; only agent with Figma and design skills |
 | `robotics` | subagent | glm-5.2 | Math, physics and robotics algorithms |
 | `tester` | subagent | deepseek-v4.1-flash | Runs tests and reports facts |
 | `reviewer` | subagent | minimax-m3 | Read-only code review |
@@ -136,13 +138,27 @@ another provider.
 
 | MCP | Used by | Purpose | Needs Node |
 |---|---|---|---|
-| `context7` | developer, robotics, researcher, docs-writer | Library docs | no (remote) |
+| `context7` | developer, app-developer, robotics, researcher, docs-writer | Library docs | no (remote) |
 | `exa` | researcher, docs-writer | Web search | no (remote) |
 | `playwright` | web-tester | Browser automation | yes |
 | `memory` | orchestrator | Project memory | yes |
+| `figma` | app-developer | Design context and canvas writes | no (OAuth) |
 
 MCP tools are denied globally and enabled per agent in its frontmatter, so they cost no context
 where unused.
+
+### Frontend workflow
+
+`@app-developer` is the only agent allowed to use Figma and the design skills. Install Impeccable
+and selected Emil skills **per frontend project**, not globally:
+
+```bash
+npx impeccable install --providers=opencode --scope=project
+npx skills add emilkowalski/skills --agent opencode --skill emil-design-eng
+```
+
+Then authenticate Figma once per machine with `opencode mcp auth figma`. Full setup, skill
+allowlist, licensing and token controls: **[docs/FRONTEND.md](docs/FRONTEND.md)**.
 
 ## Security
 

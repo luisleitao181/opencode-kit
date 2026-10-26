@@ -180,4 +180,9 @@ sessions and OpenCode installations stay local to each host.
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+The code and the generated fallback sound are MIT; see [LICENSE](LICENSE).
+
+The recorded clip `config/plugins/prompt-sound/sound.mp3` is **CC BY 3.0** by Mike Koenig
+(SoundBible), redistributed with attribution. See
+[config/plugins/prompt-sound/CREDITS.md](config/plugins/prompt-sound/CREDITS.md); that file is
+not covered by the repository's MIT license.

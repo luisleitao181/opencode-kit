@@ -44,6 +44,10 @@ The script installs into the target project only. It never installs globally.`);
 }
 
 function parse(argv) {
+  if (argv[0] === "--help" || argv[0] === "-h") {
+    usage();
+    process.exit(0);
+  }
   const command = argv[0];
   const options = { dryRun: false, purge: false, force: false, skills: DEFAULT_SKILLS, project: "." };
   const positional = [];

@@ -109,7 +109,6 @@ scripts/
   sandbox-user.sh     optional Linux/WSL isolation setup
   oc.sh               optional launcher for the sandbox
 docs/MAINTAINING.md   configuration and plugin notes for humans
-docs/FRONTEND.md      optional frontend/design skills and Figma workflow
 docs/ISOLATION.md     optional sandbox setup and troubleshooting
 SECURITY.md           threat model and limits
 ```
@@ -147,22 +146,6 @@ another provider.
 
 MCP tools are denied globally and enabled per agent in its frontmatter, so they cost no context
 where unused.
-
-### Frontend workflow
-
-`@app-developer` is the only agent allowed to use Figma and the design skills. The helper manages
-them **per frontend project**, never globally:
-
-```powershell
-node scripts/design-skills.mjs install C:\src\my-app
-node scripts/design-skills.mjs status  C:\src\my-app
-node scripts/design-skills.mjs uninstall C:\src\my-app
-```
-
-It installs Impeccable plus four selected Emil skills by default, keeps `skills-lock.json` in
-sync, and refuses to run inside the kit itself. Then authenticate Figma once per machine with
-`opencode mcp auth figma`. Full options, skill allowlist, licensing and token controls:
-**[docs/FRONTEND.md](docs/FRONTEND.md)**.
 
 ## Security
 

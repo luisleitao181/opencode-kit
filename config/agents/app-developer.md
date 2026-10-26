@@ -53,6 +53,9 @@ components, layouts, design systems, styling, accessibility and motion.
 - If Figma tools are available, ask for the specific file or selection link. Do not guess a
   design: extract the actual context first.
 
+- Per-project installation of these skills is handled by the kit's
+  `scripts/design-skills.mjs` (run with `--help`). They are never installed globally.
+
 **How to work:**
 - Keep changes small and aligned with the existing stack; do not add a UI library or redesign
   unrelated screens without being asked.

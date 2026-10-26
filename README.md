@@ -100,6 +100,7 @@ config/
 scripts/
   install.sh          Linux/WSL installer (symlinks)
   install.ps1         Windows installer (junctions/hardlinks, or -Copy)
+  design-skills.mjs   install/status/uninstall design skills per project
   generate-sound.py   synthesise the prompt-sound fallback WAV
   fetch-mp3.py        download the recorded prompt cue
   secure-commit.sh    pre-commit secret scanner for your own repositories
@@ -149,16 +150,19 @@ where unused.
 
 ### Frontend workflow
 
-`@app-developer` is the only agent allowed to use Figma and the design skills. Install Impeccable
-and selected Emil skills **per frontend project**, not globally:
+`@app-developer` is the only agent allowed to use Figma and the design skills. The helper manages
+them **per frontend project**, never globally:
 
-```bash
-npx impeccable install --providers=opencode --scope=project
-npx skills add emilkowalski/skills --agent opencode --skill emil-design-eng
+```powershell
+node scripts/design-skills.mjs install C:\src\my-app
+node scripts/design-skills.mjs status  C:\src\my-app
+node scripts/design-skills.mjs uninstall C:\src\my-app
 ```
 
-Then authenticate Figma once per machine with `opencode mcp auth figma`. Full setup, skill
-allowlist, licensing and token controls: **[docs/FRONTEND.md](docs/FRONTEND.md)**.
+It installs Impeccable plus four selected Emil skills by default, keeps `skills-lock.json` in
+sync, and refuses to run inside the kit itself. Then authenticate Figma once per machine with
+`opencode mcp auth figma`. Full options, skill allowlist, licensing and token controls:
+**[docs/FRONTEND.md](docs/FRONTEND.md)**.
 
 ## Security
 

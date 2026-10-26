@@ -15,7 +15,44 @@ infrastructure sessions pay no context cost.
 The kit does **not** vendor third-party skills. Install them in the project so their licenses,
 updates and scope stay with the upstream project.
 
-## Per-project setup
+## Managed helper (recommended)
+
+`scripts/design-skills.mjs` installs, shows and removes the selected skills in one project. It
+requires Node.js 20+, never writes globally, refuses to run inside the kit repository, and
+updates/removes the `skills-lock.json` created by the skills CLI.
+
+From the kit directory:
+
+```bash
+# check what is installed in a project
+node scripts/design-skills.mjs status C:\src\my-app
+
+# install the default set: impeccable + 4 selected Emil skills
+node scripts/design-skills.mjs install C:\src\my-app
+
+# only some skills
+node scripts/design-skills.mjs install C:\src\my-app --skills=impeccable,emil-design-eng
+
+# preview without changing anything
+node scripts/design-skills.mjs install C:\src\my-app --dry-run
+
+# remove the same set
+node scripts/design-skills.mjs uninstall C:\src\my-app
+
+# also delete .impeccable/ (PRODUCT.md, DESIGN.md, screenshots and local state)
+node scripts/design-skills.mjs uninstall C:\src\my-app --purge
+```
+
+In WSL, the script is executable:
+
+```bash
+~/opencode-kit/scripts/design-skills.mjs install ~/src/my-app
+```
+
+`--purge` is deliberately separate: your `PRODUCT.md`/`DESIGN.md` are project documentation, not
+installer output. Keep them unless you want to reset Impeccable completely.
+
+## Manual alternative
 
 From the frontend project root:
 

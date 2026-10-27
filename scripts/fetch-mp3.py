@@ -1,10 +1,12 @@
+#!/usr/bin/env python3
 """Download the recorded clip used by the prompt-sound plugin.
 
 Source: Wikimedia Commons, File:Whip-sound.ogg (a SoundBible recording by
 Mike Koenig, CC BY 3.0). We take Commons' MP3 transcode because OpenCode's audio
 engine decodes WAV/FLAC/MP3 but not Vorbis. Attribution is in CREDITS.md.
 
-Usage: python scripts/fetch-mp3.py
+Usage: ./scripts/fetch-mp3.py            (Windows: python scripts\fetch-mp3.py)
+       ./scripts/fetch-mp3.py --check    validate the local copy, no download
 Writes: config/plugins/prompt-sound/sound.mp3 (idempotent, verifies the container)
 """
 

@@ -13,8 +13,9 @@ Wikimedia Commons:
   Vorbis. The only change is the filename.
 
 Attribution is required if this file is redistributed; this use does not imply
-endorsement by the author. `scripts/fetch-mp3.py` re-downloads it;
-`scripts/fetch-mp3.py --check` re-validates the local copy.
+endorsement by the author. `./scripts/fetch-mp3.py` re-downloads it;
+`./scripts/fetch-mp3.py --check` re-validates the local copy (Windows:
+`python scripts\fetch-mp3.py`).
 
 ## fallback.wav
 

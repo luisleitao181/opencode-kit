@@ -42,3 +42,5 @@ fi
 echo "Just connect the provider now (keys are NOT in the repo):"
 echo "  opencode  ->  /connect  ->  OpenCode Go"
 echo "Then confirm models with:  opencode models"
+echo
+echo "Optional flair (sound + sticker): python3 $KIT_DIR/scripts/flair.py setup --sticker <file>"

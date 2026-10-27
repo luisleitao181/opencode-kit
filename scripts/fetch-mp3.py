@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
-"""Download the recorded clip used by the prompt-sound plugin.
+"""Download the recorded clip used by the flair plugin.
 
 Source: Wikimedia Commons, File:Whip-sound.ogg (a SoundBible recording by
 Mike Koenig, CC BY 3.0). We take Commons' MP3 transcode because OpenCode's audio
 engine decodes WAV/FLAC/MP3 but not Vorbis. Attribution is in CREDITS.md.
 
-Usage: ./scripts/fetch-mp3.py            (Windows: python scripts\fetch-mp3.py)
+Usage: ./scripts/fetch-mp3.py            (Windows: python scripts\\fetch-mp3.py)
        ./scripts/fetch-mp3.py --check    validate the local copy, no download
-Writes: config/plugins/prompt-sound/sound.mp3 (idempotent, verifies the container)
+Writes: ~/.config/opencode/flair/sound.mp3 by default, or the path given with
+        --output (idempotent, verifies the container).
 """
 
 from __future__ import annotations
 
+import argparse
+import os
 import sys
 import urllib.request
 from pathlib import Path
@@ -20,7 +23,7 @@ SOURCE = (
     "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c2/"
     "Whip-sound.ogg/Whip-sound.ogg.mp3"
 )
-OUT = Path(__file__).resolve().parent.parent / "config" / "plugins" / "prompt-sound" / "sound.mp3"
+DEFAULT_OUT = Path.home() / ".config" / "opencode" / "flair" / "sound.mp3"
 USER_AGENT = "opencode-kit/1.0 (local plugin asset)"
 
 BITRATE_KBPS = (0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 0)
@@ -50,10 +53,17 @@ def frames(data: bytes) -> tuple[int, int, int, int]:
 
 
 def main() -> int:
-    if "--check" in sys.argv:
-        data = OUT.read_bytes()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path, default=DEFAULT_OUT, help="output MP3 path")
+    parser.add_argument("--check", action="store_true", help="validate the local copy, no download")
+    args = parser.parse_args()
+
+    out_path = args.output.expanduser().resolve()
+
+    if args.check:
+        data = out_path.read_bytes()
     else:
-        OUT.parent.mkdir(parents=True, exist_ok=True)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
         request = urllib.request.Request(SOURCE, headers={"User-Agent": USER_AGENT})
         with urllib.request.urlopen(request, timeout=30) as response:
             data = response.read()
@@ -62,15 +72,20 @@ def main() -> int:
     count = round((len(data) - offset) / length)
     duration = count * 1152 / rate
 
-    OUT.write_bytes(data)
-    print(f"file {OUT} ({len(data)} bytes)")
+    if not 0.4 <= duration <= 3.0:
+        print("unexpected duration", file=sys.stderr)
+        return 1
+
+    if not args.check:
+        tmp_path = out_path.with_name(out_path.name + ".tmp")
+        tmp_path.write_bytes(data)
+        os.replace(tmp_path, out_path)
+
+    print(f"file {out_path} ({len(data)} bytes)")
     print(
         f"mpeg offset={offset} rate={rate} Hz bitrate={bitrate // 1000} kbps "
         f"frames={count} duration={duration:.3f} s"
     )
-    if not 0.4 <= duration <= 3.0:
-        print("unexpected duration", file=sys.stderr)
-        return 1
     return 0
 
 

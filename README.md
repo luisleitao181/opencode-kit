@@ -3,7 +3,7 @@
 A portable OpenCode V2 setup kept as a repository: ten agents with per-role models, shared
 rules, platform skills, MCP servers and a security layer enforced by permissions and policies.
 
-Clone it, run one script, connect your provider. 
+Clone it, run one script, connect your provider.
 
 ## Requirements
 
@@ -72,7 +72,7 @@ when present, otherwise the example, to `~/.config/opencode/instructions/machine
 opencode --version                 # 2.x
 opencode debug config              # config parses
 opencode debug agents              # all agents load
-opencode plugin list               # guardrails, explain, prompt-sound
+opencode plugin list               # guardrails, explain, flair
 opencode mcp list                  # remote MCPs connect; local ones need Node
 ```
 
@@ -83,7 +83,11 @@ In the TUI: **Tab** cycles agents, `@researcher` answers, and `/review` runs on 
 - **Tab** switches primary agents; **@name** launches a subagent.
 - `/review`, `/debug <error>`, `/devloop`, `/security-review`, `/add-platform <name>`.
 - Cheap subagents (`researcher`, `docs-writer`, `tester`) protect the main model's quota.
-- A short prompt-sound cue plays when a prompt is submitted (can be removed from `plugins/`).
+- Optional **flair**: one plugin that plays a whip-crack cue and/or animates a sticker on
+  prompt submit. `python3 scripts/flair.py setup --sticker <animation>` builds it from an
+  APNG, animated WebP, GIF or short video (needs `ffmpeg`); `setup` alone makes the cue.
+  Assets stay in `~/.config/opencode/flair` (or `FLAIR_DIR`) and the plugin no-ops without
+  them, so nothing is committed and a fresh clone is unaffected.
 - **Shift+drag** selects text in the TUI.
 
 ## Layout
@@ -95,14 +99,16 @@ config/
   instructions/       per-machine fact templates (example/local)
   agents/             ten agent definitions
   commands/           /review /debug /devloop /security-review /add-platform
-  plugins/            guardrails, permission audit, prompt sound
+  plugins/            guardrails, permission audit, optional flair
   skills/             ros2-python, isaac-sim, webots, unity
 scripts/
   install.sh          Linux/WSL installer (symlinks)
   install.ps1         Windows installer (junctions/hardlinks, or -Copy)
   design-skills.mjs   install/status/uninstall design skills per project
-  generate-sound.py   synthesise the prompt-sound fallback WAV
-  fetch-mp3.py        download the recorded prompt cue
+  flair.py            set up / inspect the optional flair assets
+  generate-sound.py   synthesise the fallback cue WAV
+  fetch-mp3.py        download the recorded cue
+  fetch-sticker.py    convert an animated sticker into flair frames
   secure-commit.sh    pre-commit secret scanner for your own repositories
   gitignore-security.txt  .gitignore block for secrets
   audit-deps.sh       dependency audit that fails only on new vulnerabilities
@@ -183,9 +189,8 @@ sessions and OpenCode installations stay local to each host.
 
 ## License
 
-The code and the generated fallback sound are MIT; see [LICENSE](LICENSE).
+The code is MIT; see [LICENSE](LICENSE).
 
-The recorded clip `config/plugins/prompt-sound/sound.mp3` is **CC BY 3.0** by Mike Koenig
-(SoundBible), redistributed with attribution. See
-[config/plugins/prompt-sound/CREDITS.md](config/plugins/prompt-sound/CREDITS.md); that file is
-not covered by the repository's MIT license.
+No third-party media is stored here. The optional cue is fetched at runtime and plays
+under **CC BY 3.0** (Mike Koenig, SoundBible); attribution and source links are in
+[config/plugins/flair/CREDITS.md](config/plugins/flair/CREDITS.md).

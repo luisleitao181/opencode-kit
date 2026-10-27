@@ -36,9 +36,12 @@ The kit targets **OpenCode V2** (`@opencode/cli`), not the legacy `opencode-ai` 
 
 - V2 discovers global plugins under `~/.config/opencode/plugins/` and resolves
   `@opencode/plugin` at runtime, so local plugins need no `package.json`.
-- A plugin directory can provide `index.ts` (server) and `tui.ts` (terminal client); a TUI-only
-  plugin may provide `tui.ts` alone. Packaging a plugin for reuse requires a `package.json` with
-  a `./tui` export.
+- A plugin directory can provide `index.ts` (server) and `tui.ts`/`tui.tsx` (terminal client); a
+  TUI-only plugin may provide the client file alone. Packaging a plugin for reuse requires a
+  `package.json` with a `./tui` export.
+- Media assets never live in the repository. `flair` reads its cue and frames from
+  `~/.config/opencode/flair` (or `FLAIR_DIR`), built by `scripts/flair.py`, and stays a no-op
+  when they are absent, so the repo holds code only.
 - The audit log belongs under the OS temporary directory (`os.tmpdir()`), never a hardcoded
   `/tmp`.
 - After changing a plugin, restart the service and check `opencode plugin list` plus the server

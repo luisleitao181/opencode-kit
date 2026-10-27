@@ -22,8 +22,7 @@ SOFTWARE.
 
 ---
 
-Third-party assets are not covered by the MIT license above:
-
-- config/plugins/prompt-sound/sound.mp3 -- "Whip-sound" by Mike Koenig
-  (SoundBible), CC BY 3.0. See config/plugins/prompt-sound/CREDITS.md for the
-  attribution, the license URI and the source.
+Third-party media is not covered by the MIT license above and is not stored in
+this repository: the optional cue is fetched at runtime and plays under CC BY 3.0
+("Whip-sound" by Mike Koenig, SoundBible). See config/plugins/flair/CREDITS.md
+for the attribution, the license URI and the source.

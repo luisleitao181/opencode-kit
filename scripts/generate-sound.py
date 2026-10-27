@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
-"""Generate a short synthesized WAV for the OpenCode prompt-sound plugin.
+"""Generate a short synthesized WAV for the OpenCode flair plugin.
 
 Pure standard library. Produces a mono 48 kHz 16-bit PCM file under
-config/plugins/prompt-sound/fallback.wav.
+~/.config/opencode/flair/fallback.wav by default, or at the path given with
+--output.
 """
 
 from __future__ import annotations
 
+import argparse
 import math
-import os
 import random
 import struct
 import wave
@@ -27,7 +28,7 @@ TRANSIENT_START = 0.030
 TAIL_START = 0.050
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-OUT_PATH = SCRIPT_DIR.parent / "config" / "plugins" / "prompt-sound" / "fallback.wav"
+DEFAULT_OUT_PATH = Path.home() / ".config" / "opencode" / "flair" / "fallback.wav"
 
 
 def moving_average_lowpass(samples: List[float], window_size: int) -> List[float]:
@@ -206,7 +207,13 @@ def write_wav(path: Path, pcm: List[int]) -> None:
         wav.writeframes(b"".join(struct.pack("<h", s) for s in pcm))
 
 
-def main() -> None:
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path, default=DEFAULT_OUT_PATH, help="output WAV path")
+    args = parser.parse_args()
+
+    out_path = args.output.expanduser().resolve()
+
     random.seed(42)
     total_samples = int(DURATION * SAMPLE_RATE)
 
@@ -221,20 +228,21 @@ def main() -> None:
     samples = apply_fades(samples)
     pcm = normalize(samples)
 
-    write_wav(OUT_PATH, pcm)
+    write_wav(out_path, pcm)
 
     # Self-check: read back the file we just wrote.
-    with wave.open(str(OUT_PATH), "rb") as wav:
+    with wave.open(str(out_path), "rb") as wav:
         channels = wav.getnchannels()
         rate = wav.getframerate()
         width = wav.getsampwidth()
         frames = wav.getnframes()
     peak = max(abs(s) for s in pcm)
-    print(f"Wrote {OUT_PATH}")
+    print(f"Wrote {out_path}")
     print(f"  duration: {frames / rate:.3f} s")
     print(f"  channels: {channels}, sample rate: {rate} Hz, sample width: {width} bytes")
     print(f"  frames: {frames}, peak level: {peak} ({peak / 32_767:.3f} of full scale)")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

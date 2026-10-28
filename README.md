@@ -83,7 +83,7 @@ In the TUI: **Tab** cycles agents, `@researcher` answers, and `/review` runs on 
 - **Tab** switches primary agents; **@name** launches a subagent.
 - `/review`, `/debug <error>`, `/devloop`, `/security-review`, `/add-platform <name>`.
 - Cheap subagents (`researcher`, `docs-writer`, `tester`) protect the main model's quota.
-- Optional **flair**: one plugin that plays a whip-crack cue and/or animates a sticker on
+- Optional **flair**: one plugin that plays a sound cue and/or animates a sticker on
   prompt submit. `python3 scripts/flair.py setup --sticker <animation>` builds it from an
   APNG, animated WebP, GIF or short video (needs `ffmpeg`); `setup` alone makes the cue.
   Assets stay in `~/.config/opencode/flair` (or `FLAIR_DIR`) and the plugin no-ops without
